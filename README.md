@@ -8,7 +8,9 @@
 .
 ├── skills/      # 放进 Agent 能识别的位置即可用的 skill
 │   ├── teach/
-│   └── frontend-design/
+│   ├── frontend-design/
+│   ├── draw-io/
+│   └── writing-clearly-and-concisely/
 └── plugins/     # 通过插件市场安装的插件
     └── ponytail/
 ```
@@ -24,6 +26,8 @@
 | --- | --- | --- |
 | [teach](#teach--教学工作区) | 把当前目录当作有状态的教学工作区，陪你在多次会话中系统学习一门技能或概念 | 显式命令 `/teach` |
 | [frontend-design](#frontend-design--前端视觉设计) | 搭建或重塑 UI 时，提供有主见、不模板化的视觉设计指导（配色、排版、布局） | 描述需求自动触发 |
+| [draw-io](#draw-io--drawio-图表) | 创建、编辑和审查 draw.io 图表：`.drawio` XML 编辑、PNG 转换、布局调整、AWS 图标 | 描述需求自动触发 |
+| [writing-clearly-and-concisely](#writing-clearly-and-concisely--清晰简洁地写作) | 写给人读的文字时，套用 Strunk 的写作规则并规避 AI 写作套路，让表达更清晰有力 | 描述需求自动触发 |
 
 ### Plugins
 
@@ -85,6 +89,40 @@
 
 ```
 帮我设计一个咖啡烘焙工作室的落地页，要有独特的视觉识别
+```
+
+### draw-io — draw.io 图表
+
+创建、编辑和审查 [draw.io](https://www.drawio.com/) 图表。适用于 `.drawio` XML 的直接编辑、导出为 PNG、坐标与布局微调，以及使用官方 AWS 图标画架构图。
+
+它把一套画图经验固化成规则：只改 `.drawio` 源文件（PNG 由 pre-commit hook 自动生成）、字体和字号设定、箭头放到底层且不压住标签、背景框与内部元素留足 30px 边距、去掉无关装饰元素，并给出一份成图前的检查清单。还提供渐进式披露（Context / System / Component / 部署 / 数据流 / 时序图分层）等设计原则。
+
+目录里带了配套脚本和参考资料：
+
+- `scripts/convert-drawio-to-png.sh` — 把 `.drawio` 转成高清 PNG
+- `scripts/find_aws_icon.py` — 按名称搜索 AWS 官方图标
+- `references/layout-guidelines.md`、`references/aws-icons.md` — 布局与图标参考
+
+**用法**
+
+这个 skill 通过描述自动触发，在你需要画图或改图时被调用，例如：
+
+```
+帮我用 draw.io 画一张这个服务的 AWS 架构图
+```
+
+### writing-clearly-and-concisely — 清晰简洁地写作
+
+在写任何给人读的文字时（文档、README、commit message、PR 描述、报错文案、UI 文案、代码注释、报告），套用 William Strunk Jr.《The Elements of Style》的经典规则，写出更清晰、更有力的表达。
+
+它同时覆盖"该做什么"和"不该做什么"两面：一面是 Strunk 的核心原则（主动语态、正面表述、具体用词、删掉多余的词），另一面是有意识地规避 AI 写作常见的套路（浮夸修饰、空话套话、推销式形容词）。附带 `elements-of-style/` 分章详解和 `signs-of-ai-writing.md`，在上下文紧张时还建议把草稿连同相关章节交给子 agent 去做校订。
+
+**用法**
+
+这个 skill 通过描述自动触发，在你请求写作或改写文字时被调用，例如：
+
+```
+帮我把这段 README 改得更简洁清晰
 ```
 
 ## Plugins
