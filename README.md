@@ -8,6 +8,7 @@
 .
 ├── skills/      # 放进 Agent 能识别的位置即可用的 skill
 │   ├── teach/
+│   ├── skill-creator/
 │   ├── frontend-design/
 │   ├── draw-io/
 │   └── writing-clearly-and-concisely/
@@ -25,6 +26,7 @@
 | Skill | 作用 | 触发方式 |
 | --- | --- | --- |
 | [teach](#teach--教学工作区) | 把当前目录当作有状态的教学工作区，陪你在多次会话中系统学习一门技能或概念 | 显式命令 `/teach` |
+| [skill-creator](#skill-creator--skill-创建与优化) | 创建、修改和评测 skill，并通过对照测试与触发评测持续优化效果 | 创建或改进 skill 时自动触发 |
 | [frontend-design](#frontend-design--前端视觉设计) | 搭建或重塑 UI 时，提供有主见、不模板化的视觉设计指导（配色、排版、布局） | 描述需求自动触发 |
 | [draw-io](#draw-io--drawio-图表) | 创建、编辑和审查 draw.io 图表：`.drawio` XML 编辑、PNG 转换、布局调整、AWS 图标 | 描述需求自动触发 |
 | [writing-clearly-and-concisely](#writing-clearly-and-concisely--清晰简洁地写作) | 写给人读的文字时，套用 Strunk 的写作规则并规避 AI 写作套路，让表达更清晰有力 | 描述需求自动触发 |
@@ -73,6 +75,26 @@
 
 ```
 这个教学区要怎么使用，整理记录到 README 中
+```
+
+### skill-creator — skill 创建与优化
+
+用于从零创建 skill，或修改、评测和优化已有 skill。它覆盖完整迭代流程：明确目标与触发场景、编写 `SKILL.md`、设计测试用例、对比启用 skill 与基线时的输出，再根据人工反馈和量化结果继续改进。
+
+目录内包含评测和打包工具：
+
+- `scripts/run_eval.py`、`scripts/run_loop.py` — 运行触发评测和描述优化循环
+- `scripts/aggregate_benchmark.py` — 汇总通过率、耗时和 token 消耗
+- `eval-viewer/` — 生成可视化评审页面
+- `agents/` — 提供评分、分析和盲测对比的子 agent 指令
+- `references/schemas.md` — 评测、评分和 benchmark 文件格式
+
+**用法**
+
+这个 skill 会在创建或改进 skill 时自动触发，也可以直接点名，例如：
+
+```
+帮我创建一个用于审查数据库迁移的 skill，并设计几组测试用例
 ```
 
 ### frontend-design — 前端视觉设计
