@@ -143,7 +143,7 @@ writing-clearly-and-concisely/
 
 **Claude Code:**
 ```bash
-cp -r skills/writing-clearly-and-concisely ~/.claude/skills/
+cp -r skills/external/writing-clearly-and-concisely ~/.claude/skills/
 ```
 
 **Claude.ai:**

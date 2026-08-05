@@ -6,30 +6,36 @@
 
 ```
 .
-├── skills/      # 放进 Agent 能识别的位置即可用的 skill
-│   ├── teach/
-│   ├── skill-creator/
-│   ├── frontend-design/
-│   ├── draw-io/
-│   └── writing-clearly-and-concisely/
+├── skills/                  # 放进 Agent 能识别的位置即可用的 skill
+│   ├── custom/              # 自己构建的 skill
+│   │   └── coscmd/
+│   └── external/            # 收集或引入的外部 skill
+│       ├── teach/
+│       ├── skill-creator/
+│       ├── frontend-design/
+│       ├── draw-io/
+│       └── writing-clearly-and-concisely/
 └── plugins/     # 通过插件市场安装的插件
     └── ponytail/
 ```
 
-- **skills/** — 每个子目录是一个独立 skill，含 `SKILL.md`（`name`、`description` 等 frontmatter），需要的话再补充格式说明或资源文件。
+- **skills/custom/** — 自己构建和维护的 skill。
+- **skills/external/** — 从官方、社区或其他来源收集的 skill。
+- 每个 skill 目录都含 `SKILL.md`（`name`、`description` 等 frontmatter），需要时再补充格式说明或资源文件。
 - **plugins/** — 每个子目录对应一个插件，通常附带自己的 `README.md` 说明安装与使用。
 
 ## 概览
 
 ### Skills
 
-| Skill | 作用 | 触发方式 |
-| --- | --- | --- |
-| [teach](#teach--教学工作区) | 把当前目录当作有状态的教学工作区，陪你在多次会话中系统学习一门技能或概念 | 显式命令 `/teach` |
-| [skill-creator](#skill-creator--skill-创建与优化) | 创建、修改和评测 skill，并通过对照测试与触发评测持续优化效果 | 创建或改进 skill 时自动触发 |
-| [frontend-design](#frontend-design--前端视觉设计) | 搭建或重塑 UI 时，提供有主见、不模板化的视觉设计指导（配色、排版、布局） | 描述需求自动触发 |
-| [draw-io](#draw-io--drawio-图表) | 创建、编辑和审查 draw.io 图表：`.drawio` XML 编辑、PNG 转换、布局调整、AWS 图标 | 描述需求自动触发 |
-| [writing-clearly-and-concisely](#writing-clearly-and-concisely--清晰简洁地写作) | 写给人读的文字时，套用 Strunk 的写作规则并规避 AI 写作套路，让表达更清晰有力 | 描述需求自动触发 |
+| Skill | 分类 | 作用 | 触发方式 |
+| --- | --- | --- | --- |
+| [coscmd](#coscmd--腾讯云-cos-命令行) | 自建 | 生成和解释 COSCMD 安装、配置及 Bucket/Object 操作命令，并提示删除、覆盖、移动等风险 | 描述 COSCMD 或腾讯云 COS 命令行需求时自动触发 |
+| [teach](#teach--教学工作区) | 外部 | 把当前目录当作有状态的教学工作区，陪你在多次会话中系统学习一门技能或概念 | 显式命令 `/teach` |
+| [skill-creator](#skill-creator--skill-创建与优化) | 外部 | 创建、修改和评测 skill，并通过对照测试与触发评测持续优化效果 | 创建或改进 skill 时自动触发 |
+| [frontend-design](#frontend-design--前端视觉设计) | 外部 | 搭建或重塑 UI 时，提供有主见、不模板化的视觉设计指导（配色、排版、布局） | 描述需求自动触发 |
+| [draw-io](#draw-io--drawio-图表) | 外部 | 创建、编辑和审查 draw.io 图表：`.drawio` XML 编辑、PNG 转换、布局调整、AWS 图标 | 描述需求自动触发 |
+| [writing-clearly-and-concisely](#writing-clearly-and-concisely--清晰简洁地写作) | 外部 | 写给人读的文字时，套用 Strunk 的写作规则并规避 AI 写作套路，让表达更清晰有力 | 描述需求自动触发 |
 
 ### Plugins
 
@@ -38,6 +44,20 @@
 | [ponytail](#ponytail--克制的资深工程师) | 写代码前先按"少即是多"的阶梯做取舍，让 agent 只写任务真正需要的代码，避免过度工程 | 安装后每次会话常驻，附 `/ponytail` 系列命令 |
 
 ## Skills
+
+### coscmd — 腾讯云 COS 命令行
+
+依据腾讯云 COSCMD 文档生成可直接执行的安装、配置和对象存储命令，覆盖上传、下载、同步、查询、删除、复制、移动、签名 URL、ACL、版本控制、归档恢复及分块碎片清理。
+
+skill 会区分全局参数和子命令参数，检查 Bucket、Region、本地路径与 COS 路径，并对 `--delete`、强制删除、覆盖下载和 `move` 等高风险操作明确提示影响范围。完整命令参考位于 `skills/custom/coscmd/references/command-reference.md`。
+
+**用法**
+
+描述目标即可自动触发，例如：
+
+```
+用 coscmd 把 D:/project 同步上传到 archive-1250000000 的 backup/project，忽略 .log 文件
+```
 
 ### teach — 教学工作区
 
@@ -55,7 +75,7 @@
 - `./assets/*` — 课程间复用的组件（样式表、测验小工具等）
 - `NOTES.md` — 记录你的学习偏好和临时笔记
 
-配套的格式说明：[MISSION-FORMAT.md](./skills/teach/MISSION-FORMAT.md)、[RESOURCES-FORMAT.md](./skills/teach/RESOURCES-FORMAT.md)、[LEARNING-RECORD-FORMAT.md](./skills/teach/LEARNING-RECORD-FORMAT.md)、[GLOSSARY-FORMAT.md](./skills/teach/GLOSSARY-FORMAT.md)。
+配套的格式说明：[MISSION-FORMAT.md](./skills/external/teach/MISSION-FORMAT.md)、[RESOURCES-FORMAT.md](./skills/external/teach/RESOURCES-FORMAT.md)、[LEARNING-RECORD-FORMAT.md](./skills/external/teach/LEARNING-RECORD-FORMAT.md)、[GLOSSARY-FORMAT.md](./skills/external/teach/GLOSSARY-FORMAT.md)。
 
 **用法**
 
@@ -157,5 +177,7 @@
 
 ## 添加新的能力
 
-- **新增 skill**：在 `skills/` 下新建一个目录，放入 `SKILL.md`（含 `name`、`description` 等 frontmatter），需要的话再补充配套的格式说明或资源文件。
+- **新增自建 skill**：在 `skills/custom/` 下新建目录。
+- **新增外部 skill**：放入 `skills/external/`，并尽量在其 README 中保留来源、许可证和上游链接。
+- 每个 skill 目录都应包含 `SKILL.md`（含 `name`、`description` 等 frontmatter），需要时再补充格式说明或资源文件。
 - **新增 plugin**：在 `plugins/` 下新建一个目录，放入插件文件，并配一份 `README.md` 说明它的作用与安装使用方式。

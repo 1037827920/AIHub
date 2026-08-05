@@ -1,0 +1,40 @@
+{
+  "skill_name": "coscmd",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我在 Windows 上要把 D:/project 整个目录同步到腾讯云 COS 的 backup/project，忽略所有 .log 文件，并且把 COS 端本地已经删除的旧文件也删掉。Bucket 是 archive-1250000000，地域 ap-guangzhou。给我可以直接复制的 COSCMD 命令。",
+      "expected_output": "生成带目标 Bucket/Region、递归同步、排除 .log 和 --delete 的上传命令，并清楚警告目标端删除风险。",
+      "files": [],
+      "expectations": [
+        "命令在 upload 子命令前使用 -b archive-1250000000 和 -r ap-guangzhou",
+        "命令包含 upload -rs、--ignore \"*.log\" 和 --delete",
+        "明确说明 --delete 会删除 COS 目标端多余对象"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "用 coscmd 把 source-1250000000（ap-beijing）里的 reports/2025.pdf 移动到 target-1250000000（ap-shanghai）的 archive/2025.pdf，并改成归档存储。只需要命令和必要提醒。",
+      "expected_output": "正确生成跨 Bucket move 命令，源对象使用完整 COS 域名，目标 Bucket/Region 使用全局选项，并设置 Archive 存储类型和移动风险提醒。",
+      "files": [],
+      "expectations": [
+        "目标 Bucket 和 Region 以全局参数 -b target-1250000000 -r ap-shanghai 出现在 move 前",
+        "源路径为 source-1250000000.cos.ap-beijing.myqcloud.com/reports/2025.pdf",
+        "目标路径为 archive/2025.pdf，并通过 x-cos-storage-class 设置 Archive",
+        "提醒 move 会删除源对象且源目标不能相同"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "一台不能联网的 Linux 服务器需要安装 COSCMD，联网机器和离线机器都是 Python 3.11。安装好后我要用临时密钥配置 bucket data-1250000000、region ap-chengdu。请给完整步骤，但不要让我把真实密钥写进回答。",
+      "expected_output": "给出联网下载依赖包、打包传输、离线安装、版本验证和临时密钥配置步骤，全部使用安全占位符。",
+      "files": [],
+      "expectations": [
+        "包含 pip download coscmd -d coscmd-packages 和离线 pip install --no-index -f coscmd-packages",
+        "说明联网和离线机器 Python 版本应一致",
+        "配置命令包含 -a、-s、-t、-b data-1250000000 和 -r ap-chengdu",
+        "SecretId、SecretKey 和 Token 均使用占位符而不伪造真实凭据"
+      ]
+    }
+  ]
+}
