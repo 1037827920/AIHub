@@ -14,6 +14,7 @@
 │       ├── skill-creator/
 │       ├── frontend-design/
 │       ├── draw-io/
+│       ├── alphaear/
 │       └── writing-clearly-and-concisely/
 └── plugins/     # 通过插件市场安装的插件
     └── ponytail/
@@ -35,6 +36,15 @@
 | [skill-creator](#skill-creator--skill-创建与优化) | 外部 | 创建、修改和评测 skill，并通过对照测试与触发评测持续优化效果 | 创建或改进 skill 时自动触发 |
 | [frontend-design](#frontend-design--前端视觉设计) | 外部 | 搭建或重塑 UI 时，提供有主见、不模板化的视觉设计指导（配色、排版、布局） | 描述需求自动触发 |
 | [draw-io](#draw-io--drawio-图表) | 外部 | 创建、编辑和审查 draw.io 图表：`.drawio` XML 编辑、PNG 转换、布局调整、AWS 图标 | 描述需求自动触发 |
+| [alphaear-stock](#alphaear-stock--股票代码与行情) | 外部 / AlphaEar | 搜索 A 股、港股、美股代码，获取历史行情和基础面信息 | 询问股票代码、近期价格变化或公司股票信息时自动触发 |
+| [alphaear-news](#alphaear-news--财经新闻与预测市场) | 外部 / AlphaEar | 拉取实时财经热点、聚合多源趋势，并获取 Polymarket 预测市场数据 | 需要实时财经新闻、热点趋势或预测市场摘要时自动触发 |
+| [alphaear-search](#alphaear-search--财经搜索与本地-rag) | 外部 / AlphaEar | 统一财经搜索入口，支持 Jina、DuckDuckGo、百度和本地新闻库检索 | 需要财经网页搜索或本地资料检索时自动触发 |
+| [alphaear-sentiment](#alphaear-sentiment--财经文本情绪分析) | 外部 / AlphaEar | 用 FinBERT 或 LLM 判断财经文本的正负中性、分数和理由 | 分析新闻、公告、研报片段的市场情绪时自动触发 |
+| [alphaear-predictor](#alphaear-predictor--市场时间序列预测) | 外部 / AlphaEar | 使用 Kronos 做金融市场时间序列预测，并结合新闻情绪调整结果 | 需要行情预测、趋势预估或新闻修正预测时自动触发 |
+| [alphaear-signal-tracker](#alphaear-signal-tracker--投资信号追踪) | 外部 / AlphaEar | 跟踪投资信号在新信息下被强化、削弱、证伪或保持不变 | 监控投资逻辑和更新信号置信度时自动触发 |
+| [alphaear-reporter](#alphaear-reporter--金融报告生成) | 外部 / AlphaEar | 将财经信号和分析材料整理为结构化专业报告，并生成图表配置 | 需要把金融分析压缩成报告、摘要或章节时自动触发 |
+| [alphaear-logic-visualizer](#alphaear-logic-visualizer--金融逻辑可视化) | 外部 / AlphaEar | 生成 draw.io 兼容的金融传导链、投资逻辑图和流程图 | 需要解释复杂金融逻辑链路或画图时自动触发 |
+| [alphaear-deepear-lite](#alphaear-deepear-lite--deepear-lite-实时信号) | 外部 / AlphaEar | 从 DeepEar Lite 拉取最新高频金融信号、置信度、摘要和来源 | 需要快速查看 DeepEar Lite 仪表盘信号时自动触发 |
 | [writing-clearly-and-concisely](#writing-clearly-and-concisely--清晰简洁地写作) | 外部 | 写给人读的文字时，套用 Strunk 的写作规则并规避 AI 写作套路，让表达更清晰有力 | 描述需求自动触发 |
 
 ### Plugins
@@ -151,6 +161,108 @@ skill 会区分全局参数和子命令参数，检查 Bucket、Region、本地�
 
 ```
 帮我用 draw.io 画一张这个服务的 AWS 架构图
+```
+
+### AlphaEar — 金融市场分析技能组
+
+`skills/external/alphaear/` 下是一组面向金融市场研究的组合 skill，覆盖数据获取、搜索、情绪、预测、信号追踪、报告生成和逻辑可视化。它们可以单独触发，也可以在复杂任务里互相配合，例如先用 `alphaear-news` 和 `alphaear-search` 收集信息，再用 `alphaear-sentiment`、`alphaear-predictor`、`alphaear-signal-tracker` 做判断，最后交给 `alphaear-reporter` 输出报告。
+
+> 这些能力会访问实时数据、第三方 API 或本地模型；预测和信号分析只用于研究与辅助判断，不构成投资建议。
+
+#### alphaear-stock — 股票代码与行情
+
+搜索 A 股、港股、美股股票代码，并获取历史 OHLCV 行情和基础面信息。主要工具是 `scripts/stock_tools.py` 中的 `StockTools`，支持 `search_ticker`、`get_stock_price` 和 `get_stock_fundamentals`。
+
+依赖包括 `pandas`、`requests`、`akshare`、`yfinance`。美股数据来自 Yahoo Finance，网络不可达时可能需要配置代理；A 股和港股数据主要通过 AkShare / 东方财富获取。
+
+**用法**
+
+```
+帮我查一下 600519 最近一个月的行情和基本面
+```
+
+#### alphaear-news — 财经新闻与预测市场
+
+拉取实时财经热点、聚合多源趋势，并获取 Polymarket 预测市场数据。`NewsNowTools.fetch_hot_news` 可按来源抓取热点，`get_unified_trends` 可合并多源趋势；`PolymarketTools.get_market_summary` 可输出活跃预测市场摘要。
+
+可用新闻来源见 `skills/external/alphaear/alphaear-news/references/sources.md`。
+
+**用法**
+
+```
+汇总今天微博、华尔街见闻和财联社的主要财经热点
+```
+
+#### alphaear-search — 财经搜索与本地 RAG
+
+统一财经搜索入口，支持 Jina、DuckDuckGo、百度和本地新闻库检索。`SearchTools.search` 可指定 `jina`、`ddg`、`baidu`、`local`，`aggregate_search` 可聚合多引擎结果；本地检索通过 `hybrid_search.py` 查询 `daily_news` 数据库。
+
+**用法**
+
+```
+搜索英伟达最新财报和市场反应，并优先复用已有本地新闻
+```
+
+#### alphaear-sentiment — 财经文本情绪分析
+
+面向金融文本做情绪判断，输出 `positive`、`negative` 或 `neutral` 标签、-1.0 到 1.0 的分数和简短理由。短文本和批处理可用本地 FinBERT；需要更强推理时，用 skill 中的 LLM prompt 做人工式判断，再按需写回数据库。
+
+**用法**
+
+```
+分析这条新闻对半导体板块的情绪影响，并给出分数和理由
+```
+
+#### alphaear-predictor — 市场时间序列预测
+
+使用 Kronos 进行金融市场时间序列预测，并可结合新闻情绪对技术预测做主观修正。核心工具是 `KronosPredictorUtility`，支持生成基础预测，再通过 `references/PROMPTS.md` 中的预测调整 prompt 融合新闻逻辑。
+
+依赖 `torch`、`transformers`、`sentence-transformers`、`pandas`、`numpy`、`scikit-learn`。模型权重只应来自可信来源；可通过 `EMBEDDING_MODEL`、`KRONOS_MODEL_PATH` 配置模型路径。
+
+**用法**
+
+```
+基于最近行情和新闻，预测 600519 未来 7 天走势
+```
+
+#### alphaear-signal-tracker — 投资信号追踪
+
+跟踪投资信号在新市场信息下的演化，判断信号是被强化、削弱、证伪还是基本不变，并更新置信度与强度。它会结合 `alphaear-search` 和 `alphaear-stock` 获取事实和价格，再用 `references/PROMPTS.md` 中的研究、分析和追踪 prompt 做判断。
+
+**用法**
+
+```
+跟踪这个 AI 算力供需改善信号，看看最新新闻是强化还是削弱它
+```
+
+#### alphaear-reporter — 金融报告生成
+
+把财经信号、搜索结果、行情变化和分析材料整理成结构化专业报告。工作流包括信号聚类、分章节写作和最终组装；需要图表时可用 `scripts/visualizer.py` 或在报告中生成 `json-chart` 配置。
+
+**用法**
+
+```
+把这些市场信号整理成一份结构化周报，包含核心观点、证据和风险
+```
+
+#### alphaear-logic-visualizer — 金融逻辑可视化
+
+生成 draw.io 兼容的金融逻辑图，适合展示投资假设、产业链传导、宏观到资产价格的影响路径。它使用 `references/PROMPTS.md` 生成 XML，再通过 `scripts/visualizer.py` 渲染为可查看的 HTML。
+
+**用法**
+
+```
+把“美元走弱 -> 大宗商品上涨 -> 资源股盈利改善”的传导链画成 draw.io 图
+```
+
+#### alphaear-deepear-lite — DeepEar Lite 实时信号
+
+从 DeepEar Lite 的实时数据源拉取最新金融信号，包含标题、摘要、情绪、置信度、推理链和来源链接。它不依赖本地数据库，主要通过 `scripts/deepear_lite.py` 中的 `DeepEarLiteTools.fetch_latest_signals` 获取数据。
+
+**用法**
+
+```
+拉取 DeepEar Lite 最新金融信号，并按置信度排序总结
 ```
 
 ### writing-clearly-and-concisely — 清晰简洁地写作
