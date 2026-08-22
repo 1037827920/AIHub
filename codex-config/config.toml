@@ -1,0 +1,144 @@
+
+notify = ["/Users/mingtaohuang/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+model_provider = "proxy"
+
+[model_providers.proxy]
+name = "MingTao Huang"
+base_url = "https://api.penguinsaichat.dpdns.org/v1"
+wire_api = "responses"
+requires_openai_auth = true
+web_search = "live"
+
+[marketplaces.openai-bundled]
+source_type = "local"
+source = "/Users/mingtaohuang/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-08-19T23:16:13Z"
+source_type = "local"
+source = "/Users/mingtaohuang/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[plugins."visualize@openai-bundled"]
+enabled = true
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."codex-app-tools@openai-bundled"]
+enabled = true
+
+[features]
+js_repl = false
+
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/mingtaohuang/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+CODEX_HOME = "/Users/mingtaohuang/.codex"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+BROWSER_USE_TINYSKY_ENABLED = "0"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.818.31338"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/mingtaohuang/.codex/plugins/cache/openai-bundled/browser/26.818.31338/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
+CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
+
+[mcp_servers.computer-use]
+command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
+args = ["mcp"]
+cwd = "."
+enabled = false
+
+[shell_environment_policy.set]
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "028a14b6eaa6d98dac2aae00764345ab9f244801ed8493d42b9af3be5575006e,f204d340535055781952b10ed396de20b842f00a19e430852f7e121ad1ce91f6"
+
+[desktop]
+conversationDetailMode = "STEPS_COMMANDS"
+ambient-suggestions-enabled = false
+followUpQueueMode = "queue"
+appearanceTheme = "dark"
+appearanceDarkCodeThemeId = "vscode-plus"
+show-context-window-usage = true
+notifications-turn-mode = "always"
+mac-menu-bar-enabled = false
+
+[desktop.appearanceDarkChromeTheme]
+accent = "#007acc"
+contrast = 60
+ink = "#d4d4d4"
+opaqueWindows = false
+surface = "#1e1e1e"
+
+[desktop.appearanceDarkChromeTheme.fonts]
+
+[desktop.appearanceDarkChromeTheme.semanticColors]
+diffAdded = "#369432"
+diffRemoved = "#f44747"
+skill = "#000080"
+
+[projects."/Users/mingtaohuang/Documents/Codex/2026-07-22/ni-ha"]
+trust_level = "trusted"
+
+[projects."/Users/mingtaohuang/Documents/Codex/2026-07-22/ni-h"]
+trust_level = "trusted"
+
+[projects."/Users/mingtaohuang/Documents/Codex/2026-07-22/ni-ha-2"]
+trust_level = "trusted"
+
+[projects."/Users/mingtaohuang/Documents/Codex/2026-07-22/niha"]
+trust_level = "trusted"
+
+[projects."/Users/mingtaohuang/Documents/Codex/2026-07-22/nih"]
+trust_level = "trusted"
+
+[projects."/Users/mingtaohuang/Documents/Codex/2026-07-23/bang"]
+trust_level = "trusted"
+
+[projects."/Users/mingtaohuang/Documents/Codex/2026-07-23/ni"]
+trust_level = "trusted"
+
+[projects."/Users/mingtaohuang/Documents/Codex/2026-07-23/new-chat"]
+trust_level = "trusted"
+
+[projects."/Users/mingtaohuang/Documents/Codex/2026-07-23/teach"]
+trust_level = "trusted"
+
+[projects."/Users/mingtaohuang/Documents/Codex/2026-07-23/te"]
+trust_level = "trusted"
+
+[projects."/Users/mingtaohuang/Documents/Codex/2026-07-23/tea"]
+trust_level = "trusted"
+
+[projects."/Users/mingtaohuang/Documents/Codex/2026-07-26/ni-ha"]
+trust_level = "trusted"
+
+[projects."/Users/mingtaohuang/Documents/Codex/2026-07-26/niha"]
+trust_level = "trusted"
+
+[projects."/Users/mingtaohuang/Documents/Codex/2026-08-05/ni"]
+trust_level = "trusted"
