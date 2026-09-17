@@ -14,6 +14,7 @@
 │       ├── skill-creator/
 │       ├── frontend-design/
 │       ├── draw-io/
+│       ├── explain-code/
 │       ├── alphaear/
 │       └── writing-clearly-and-concisely/
 └── plugins/     # 通过插件市场安装的插件
@@ -36,6 +37,7 @@
 | [skill-creator](#skill-creator--skill-创建与优化) | 外部 | 创建、修改和评测 skill，并通过对照测试与触发评测持续优化效果 | 创建或改进 skill 时自动触发 |
 | [frontend-design](#frontend-design--前端视觉设计) | 外部 | 搭建或重塑 UI 时，提供有主见、不模板化的视觉设计指导（配色、排版、布局） | 描述需求自动触发 |
 | [draw-io](#draw-io--drawio-图表) | 外部 | 创建、编辑和审查 draw.io 图表：`.drawio` XML 编辑、PNG 转换、布局调整、AWS 图标 | 描述需求自动触发 |
+| [explain-code](#explain-code--代码讲解) | 外部 | 用类比、ASCII 示意图、执行步骤和常见误区，清晰解释代码与代码库 | 询问代码如何工作、教学或理解代码库时自动触发 |
 | [alphaear-stock](#alphaear-stock--股票代码与行情) | 外部 / AlphaEar | 搜索 A 股、港股、美股代码，获取历史行情和基础面信息 | 询问股票代码、近期价格变化或公司股票信息时自动触发 |
 | [alphaear-news](#alphaear-news--财经新闻与预测市场) | 外部 / AlphaEar | 拉取实时财经热点、聚合多源趋势，并获取 Polymarket 预测市场数据 | 需要实时财经新闻、热点趋势或预测市场摘要时自动触发 |
 | [alphaear-search](#alphaear-search--财经搜索与本地-rag) | 外部 / AlphaEar | 统一财经搜索入口，支持 Jina、DuckDuckGo、百度和本地新闻库检索 | 需要财经网页搜索或本地资料检索时自动触发 |
@@ -161,6 +163,18 @@ skill 会区分全局参数和子命令参数，检查 Bucket、Region、本地�
 
 ```
 帮我用 draw.io 画一张这个服务的 AWS 架构图
+```
+
+### explain-code — 代码讲解
+
+用中文解释代码和代码库，尤其适合回答“这段代码如何工作”“这个模块做什么”一类问题。它会先以日常事物类比建立直觉，再用 ASCII 示意图展示流程、结构或依赖关系，随后按执行顺序逐步讲解，并指出容易混淆的概念和常见错误。
+
+**用法**
+
+这个 skill 会在请求解释代码、学习代码库或询问代码工作原理时自动触发，例如：
+
+```
+这段认证中间件是怎么工作的？请从请求进入到返回响应一步步解释
 ```
 
 ### AlphaEar — 金融市场分析技能组
