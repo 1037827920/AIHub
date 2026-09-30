@@ -1,0 +1,4 @@
+interface:
+  display_name: "Linux vmcore 分析"
+  short_description: "分析 Linux vmcore、内核崩溃与虚机内存转储，核对符号并建立故障证据链"
+  default_prompt: "使用 $kernel-vmcore-analysis 检查我的 vmcore 与匹配符号，选择合适工具并分析内核故障。"
