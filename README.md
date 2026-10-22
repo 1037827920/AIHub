@@ -1,43 +1,59 @@
 # AIHub
 
-个人收集的、觉得好用的 Agent 增强能力集合。既包含 **skill**（放进目录即用、靠 `SKILL.md` 定义能力和触发方式），也包含 **plugin**（通过插件市场安装、常驻会话）。
+个人收集和维护的 Agent 增强能力集合，包含以 `SKILL.md` 定义的 **skill**、**plugin** 安装使用说明，以及 Codex 配置文件。
 
 ## 目录布局
 
-```
+```text
 .
+├── AGENTS.md                # 仓库维护与 Agent 协作约定
+├── README.md                # 能力索引与使用说明
+├── auto-commit.sh           # 暂存、提交并推送全部改动的快捷脚本
+├── codex-config/
+│   └── config.toml          # 收集的 Codex 配置
 ├── skills/                  # 放进 Agent 能识别的位置即可用的 skill
 │   ├── custom/              # 自己构建的 skill
-│   │   └── coscmd/
+│   │   ├── coscmd/
+│   │   └── kernel-vmcore-analysis/
 │   └── external/            # 收集或引入的外部 skill
-│       ├── teach/
-│       ├── skill-creator/
-│       ├── frontend-design/
+│       ├── alphaear/         # 9 个独立 skill，见下方概览
 │       ├── draw-io/
 │       ├── explain-code/
-│       ├── alphaear/
+│       ├── fitness-diet-planner-free/
+│       ├── frontend-design/
+│       ├── perf-prof/
+│       ├── skill-creator/
+│       ├── teach/
 │       └── writing-clearly-and-concisely/
-└── plugins/     # 通过插件市场安装的插件
+└── plugins/                 # 插件安装与使用说明
     └── ponytail/
+        └── README.md
 ```
 
 - **skills/custom/** — 自己构建和维护的 skill。
 - **skills/external/** — 从官方、社区或其他来源收集的 skill。
-- 每个 skill 目录都含 `SKILL.md`（`name`、`description` 等 frontmatter），需要时再补充格式说明或资源文件。
-- **plugins/** — 每个子目录对应一个插件，通常附带自己的 `README.md` 说明安装与使用。
+- 每个独立 skill 目录都含 `SKILL.md`（`name`、`description` 等 frontmatter），需要时再补充脚本、格式说明或资源文件。`alphaear/` 是技能组目录，具体 skill 位于其子目录。
+- **plugins/** — 每个子目录对应一个插件；目前 `ponytail/` 仅收录安装与使用说明。
+- **codex-config/** — 收集的 Codex 配置，使用前按本机环境检查并调整。
+- **AGENTS.md** — 面向维护本仓库的 Agent，说明修改约定与验证方式。
 
 ## 概览
 
 ### Skills
 
+当前共 19 个独立 skill：自建 2 个，外部 17 个（含 AlphaEar 的 9 个）。目录名与 skill 名称可能不同，例如 `fitness-diet-planner-free/` 中定义的名称为 `fitness-diet-planner`。
+
 | Skill | 分类 | 作用 | 触发方式 |
 | --- | --- | --- | --- |
 | [coscmd](#coscmd--腾讯云-cos-命令行) | 自建 | 生成和解释 COSCMD 安装、配置及 Bucket/Object 操作命令，并提示删除、覆盖、移动等风险 | 描述 COSCMD 或腾讯云 COS 命令行需求时自动触发 |
+| [kernel-vmcore-analysis](#kernel-vmcore-analysis--linux-内核转储分析) | 自建 | 预检并分析 Linux vmcore 与虚机内存 dump，定位 panic、lockup、hung task 等故障 | 分析内核转储、匹配符号或指导采集与转换时触发 |
 | [teach](#teach--教学工作区) | 外部 | 把当前目录当作有状态的教学工作区，陪你在多次会话中系统学习一门技能或概念 | 显式命令 `/teach` |
 | [skill-creator](#skill-creator--skill-创建与优化) | 外部 | 创建、修改和评测 skill，并通过对照测试与触发评测持续优化效果 | 创建或改进 skill 时自动触发 |
 | [frontend-design](#frontend-design--前端视觉设计) | 外部 | 搭建或重塑 UI 时，提供有主见、不模板化的视觉设计指导（配色、排版、布局） | 描述需求自动触发 |
 | [draw-io](#draw-io--drawio-图表) | 外部 | 创建、编辑和审查 draw.io 图表：`.drawio` XML 编辑、PNG 转换、布局调整、AWS 图标 | 描述需求自动触发 |
 | [explain-code](#explain-code--代码讲解) | 外部 | 用类比、ASCII 示意图、执行步骤和常见误区，清晰解释代码与代码库 | 询问代码如何工作、教学或理解代码库时自动触发 |
+| [fitness-diet-planner](#fitness-diet-planner--训练与饮食计划) | 外部 | 生成训练与饮食计划，计算热量和宏量营养素，并通过照片或文字记餐 | 制定或调整训练饮食计划、拍照记餐时触发 |
+| [perf-prof](#perf-prof--linux-系统性能分析) | 外部 | 使用 perf-prof 分析 CPU、调度、内存、IO、虚拟化和系统调用性能 | 排查 Linux 性能问题或学习相关内核机制时触发 |
 | [alphaear-stock](#alphaear-stock--股票代码与行情) | 外部 / AlphaEar | 搜索 A 股、港股、美股代码，获取历史行情和基础面信息 | 询问股票代码、近期价格变化或公司股票信息时自动触发 |
 | [alphaear-news](#alphaear-news--财经新闻与预测市场) | 外部 / AlphaEar | 拉取实时财经热点、聚合多源趋势，并获取 Polymarket 预测市场数据 | 需要实时财经新闻、热点趋势或预测市场摘要时自动触发 |
 | [alphaear-search](#alphaear-search--财经搜索与本地-rag) | 外部 / AlphaEar | 统一财经搜索入口，支持 Jina、DuckDuckGo、百度和本地新闻库检索 | 需要财经网页搜索或本地资料检索时自动触发 |
@@ -69,6 +85,18 @@ skill 会区分全局参数和子命令参数，检查 Bucket、Region、本地�
 
 ```
 用 coscmd 把 D:/project 同步上传到 archive-1250000000 的 backup/project，忽略 .log 文件
+```
+
+### kernel-vmcore-analysis — Linux 内核转储分析
+
+分析 Linux 内核 vmcore 与虚机内存 dump，排查 panic、BUG、lockup、hung task、内存及内核子系统故障。先检查 dump 元数据、工具与符号材料，再以 crash、drgn、drgn-crash 为主，结合日志、任务栈和关联对象验证结论。
+
+目录内提供只读预检脚本 `scripts/preflight.py`，以及 crash、drgn、GDB、ELF 工具和转储采集转换的参考资料。预检结果不代表符号匹配或 dump 完整；分析时需保留这些限制。入口见 [SKILL.md](./skills/custom/kernel-vmcore-analysis/SKILL.md)。
+
+**用法**
+
+```text
+分析这个 vmcore 和对应的 vmlinux，检查符号是否匹配，并定位 panic 原因
 ```
 
 ### teach — 教学工作区
@@ -175,6 +203,30 @@ skill 会区分全局参数和子命令参数，检查 Bucket、Region、本地�
 
 ```
 这段认证中间件是怎么工作的？请从请求进入到返回响应一步步解释
+```
+
+### fitness-diet-planner — 训练与饮食计划
+
+根据身体数据、训练目标、饮食偏好和可用器械生成每周训练与每日餐单，通过 `scripts/plan_calculator.py` 计算热量和宏量营养素，并根据进度调整计划。也支持从食物照片或文字描述记餐，比较摄入量与计划目标。
+
+目录名为 `fitness-diet-planner-free/`，skill 名称为 `fitness-diet-planner`。目录内包含食材与中式菜品数据、训练和营养参考资料、进度模板及自测脚本。详细说明见 [README.md](./skills/external/fitness-diet-planner-free/README.md)，触发范围见 [SKILL.md](./skills/external/fitness-diet-planner-free/SKILL.md)。
+
+**用法**
+
+```text
+根据我的身体数据和器械条件，制定一周减脂训练与饮食计划，并帮我记录每天的餐食
+```
+
+### perf-prof — Linux 系统性能分析
+
+使用基于 perf_event 的 perf-prof 工具分析 Linux 系统性能，覆盖 CPU 热点、进程状态、调度延迟、内存泄漏、块设备 IO、虚拟化退出和系统调用耗时。
+
+按问题定界、分析器选择、事件过滤、采集和结果解读逐步定位，配套 `references/` 包含各分析器、事件过滤与表达式文档。入口见 [SKILL.md](./skills/external/perf-prof/SKILL.md)。
+
+**用法**
+
+```text
+用 perf-prof 排查这个进程的延迟抖动，先区分 CPU 热点、调度等待和 IO 等待
 ```
 
 ### AlphaEar — 金融市场分析技能组
@@ -301,9 +353,16 @@ skill 会区分全局参数和子命令参数，检查 Bucket、Region、本地�
 
 它是一个通过插件市场安装的插件，而非放进目录即用的 skill。安装、命令和各家 agent 的接入方式详见 [plugins/ponytail/README.md](./plugins/ponytail/README.md)。
 
+## 配置与维护
+
+- [codex-config/config.toml](./codex-config/config.toml)：收集的 Codex 配置文件，使用前检查其中的路径、服务地址和环境相关选项。
+- [AGENTS.md](./AGENTS.md)：本仓库的目录约定、文档同步要求与验证方式。
+- [auto-commit.sh](./auto-commit.sh)：依次执行 `git add .`、`git commit -m "$1"` 和 `git push`；会暂存当前目录下的全部改动。执行前检查 `git status` 与 `git diff`，参数为提交说明。
+
 ## 添加新的能力
 
 - **新增自建 skill**：在 `skills/custom/` 下新建目录。
 - **新增外部 skill**：放入 `skills/external/`，并尽量在其 README 中保留来源、许可证和上游链接。
-- 每个 skill 目录都应包含 `SKILL.md`（含 `name`、`description` 等 frontmatter），需要时再补充格式说明或资源文件。
-- **新增 plugin**：在 `plugins/` 下新建一个目录，放入插件文件，并配一份 `README.md` 说明它的作用与安装使用方式。
+- 每个独立 skill 目录都应包含 `SKILL.md`（含 `name`、`description` 等 frontmatter），需要时再补充脚本、格式说明或资源文件；技能组的每个子 skill 应有自己的入口文件。
+- **新增 plugin**：在 `plugins/` 下新建目录，收录插件或其安装说明，并在 `README.md` 中说明实际包含的内容及安装使用方式。
+- 新增、删除或移动能力后，同步更新本 README 的目录树、概览、数量和对应说明，确保名称、路径与链接一致。
