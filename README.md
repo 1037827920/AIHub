@@ -14,7 +14,8 @@
 ├── skills/                  # 放进 Agent 能识别的位置即可用的 skill
 │   ├── custom/              # 自己构建的 skill
 │   │   ├── coscmd/
-│   │   └── kernel-vmcore-analysis/
+│   │   ├── kernel-vmcore-analysis/
+│   │   └── patch-restore-author/
 │   └── external/            # 收集或引入的外部 skill
 │       ├── alphaear/         # 9 个独立 skill，见下方概览
 │       ├── draw-io/
@@ -41,12 +42,13 @@
 
 ### Skills
 
-当前共 19 个独立 skill：自建 2 个，外部 17 个（含 AlphaEar 的 9 个）。目录名与 skill 名称可能不同，例如 `fitness-diet-planner-free/` 中定义的名称为 `fitness-diet-planner`。
+当前共 20 个独立 skill：自建 3 个，外部 17 个（含 AlphaEar 的 9 个）。目录名与 skill 名称可能不同，例如 `fitness-diet-planner-free/` 中定义的名称为 `fitness-diet-planner`。
 
 | Skill | 分类 | 作用 | 触发方式 |
 | --- | --- | --- | --- |
 | [coscmd](#coscmd--腾讯云-cos-命令行) | 自建 | 生成和解释 COSCMD 安装、配置及 Bucket/Object 操作命令，并提示删除、覆盖、移动等风险 | 描述 COSCMD 或腾讯云 COS 命令行需求时自动触发 |
 | [kernel-vmcore-analysis](#kernel-vmcore-analysis--linux-内核转储分析) | 自建 | 预检并分析 Linux vmcore 与虚机内存 dump，定位 panic、lockup、hung task 等故障 | 分析内核转储、匹配符号或指导采集与转换时触发 |
+| [patch-restore-author](#patch-restore-author--恢复-patch-作者与日期) | 自建 | 从原始 commit 恢复 patch 的 From、Date，可选追加 Reviewed-by，并保持 diff 不变 | 修正单个或批量 patch 的作者、日期与 reviewer 时触发 |
 | [teach](#teach--教学工作区) | 外部 | 把当前目录当作有状态的教学工作区，陪你在多次会话中系统学习一门技能或概念 | 显式命令 `/teach` |
 | [skill-creator](#skill-creator--skill-创建与优化) | 外部 | 创建、修改和评测 skill，并通过对照测试与触发评测持续优化效果 | 创建或改进 skill 时自动触发 |
 | [frontend-design](#frontend-design--前端视觉设计) | 外部 | 搭建或重塑 UI 时，提供有主见、不模板化的视觉设计指导（配色、排版、布局） | 描述需求自动触发 |
@@ -97,6 +99,19 @@ skill 会区分全局参数和子命令参数，检查 Bucket、Region、本地�
 
 ```text
 分析这个 vmcore 和对应的 vmlinux，检查符号是否匹配，并定位 panic 原因
+```
+
+### patch-restore-author — 恢复 patch 作者与日期
+
+将单个或批量 Git patch 的 `From:`、`Date:` 替换为原始 commit 的作者和作者日期，保留时区。reviewer 可选，提供时追加 `Reviewed-by`，重复运行不会重复署名。原始 commit 优先从 patch 正文中的来源标记定位，也可明确指定仓库与 commit。
+
+配套 Python 脚本默认输出到 `rewritten-patches/`，支持原地替换，校验其他邮件头、提交说明和 diff 内容保持不变。入口与命令示例见 [SKILL.md](./skills/custom/patch-restore-author/SKILL.md)。
+
+**用法**
+
+```text
+用 patch-restore-author 处理这几个 patch，恢复原始 commit 的作者和日期，
+加上 Reviewed-by: Wei Yang <albinwyang@tencent.com>，输出到 result/。
 ```
 
 ### teach — 教学工作区

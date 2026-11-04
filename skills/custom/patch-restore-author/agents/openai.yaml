@@ -1,0 +1,3 @@
+interface:
+  display_name: "恢复 Patch 作者与日期"
+  short_description: "从原始 Git 提交恢复 patch 作者和作者日期，可选追加 reviewer 并保留补丁正文"
